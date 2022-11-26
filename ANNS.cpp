@@ -6,15 +6,16 @@
 using namespace std;
 
 
-
 class Neuron {
 
 public:
     double output;
     vector<double> weights;
+    double gradient;
     
     Neuron (double output) {
         this->output = output;
+        gradient = 0;
     }
 
     void initializeWeights(int weightSize, int n_index) {
@@ -60,15 +61,15 @@ public:
     }
 
 
-    void forwardPassSoftmax(vector<Neuron>& prevLayer, int n_index) {
+    double forwardPassLastLayer(vector<Neuron>& prevLayer, int n_index) {
         double sum = 0;
         for (int i = 0; i < prevLayer.size(); i++) {
             sum += prevLayer[i].output * prevLayer[i].weights[n_index];
         }
+        output = exp(sum);
+        return output;
     }
 
-
-    
     void backwardPass() {
 
     }
@@ -80,8 +81,9 @@ class NeuralNet {
     
     public:
         vector<Layer>Layers;
-
-        NeuralNet(vector<int> topology) {
+        double eta;
+        
+        NeuralNet(vector<int> topology,double eta) {
             Layers.resize(topology.size());
             for(int i=0;i<topology.size();i++){
                 Layers[i].push_back(Neuron(1));
@@ -89,6 +91,7 @@ class NeuralNet {
                     Layers[i].push_back(Neuron(0));
                 } 
             }
+            this->eta = eta;
         }
 
         void initializeWeights() {
@@ -101,6 +104,8 @@ class NeuralNet {
                 }
             }
         }
+
+    
         // runs through all layers, and exludes the first neuron (bias neuron)
         void forwardPass(vector<double>& input) {
             
@@ -111,15 +116,51 @@ class NeuralNet {
             }
             
 
-            for (int i = 1; i < Layers.size(); i++) {
+            for (int i = 1; i < Layers.size()-1; i++) {
                 for (int j = 1; j < Layers[i].size(); j++) {
                     Layers[i][j].forwardPassSigmoid(Layers[i - 1], j);
                 }
             }
+
+            int lastlayer = Layers.size()-1;
+            double normalize_factor = 0;
+            for (int j = 1; j < Layers[lastlayer].size(); j++) {
+                    normalize_factor += Layers[lastlayer][j].forwardPassLastLayer(Layers[lastlayer - 1], j);
+            }
+            for (int j = 1; j < Layers[lastlayer].size(); j++) {
+                    Layers[lastlayer][j].output /= normalize_factor;
+            }
         }
 
-        void backwardPass() {
+
+        void backwardPass(vector<double>& trueOutput) {
+            //compute graidents for last layer
+            int lastLayer = Layers.size() - 1;
+            for (int i = 1; i < Layers[lastLayer].size(); i++) {
+                Layers[lastLayer][i].gradient = Layers[lastLayer][i].output - trueOutput[i - 1];
+            }
+
+            // for all prev layers compute gradients update weights
+            for (int i = lastLayer - 1; i >= 0; i--) {
             
+                //compute gradients
+                for (int neuron = 1; neuron < Layers[i].size(); neuron++) {
+                    double grad = 0;
+                    for (int w = 1; w < Layers[i][neuron].weights.size(); w++) {
+                        grad += Layers[i][neuron].weights[w] * Layers[i + 1][w].gradient;
+                    }
+                    Layers[i][neuron].gradient = grad * Layers[i][neuron].output * (1 - Layers[i][neuron].output);
+                }
+
+                //update weights
+                for (int neuron = 0; neuron < Layers[i].size(); neuron++) {
+                    for (int w = 1; w < Layers[i][neuron].weights.size(); w++) {
+                        double delta = Layers[i + 1][w].gradient * Layers[i][neuron].output;
+                        Layers[i][neuron].weights[w] -= this->eta * delta;
+                    }
+                }
+            }
+
         }
 
 
@@ -127,9 +168,11 @@ class NeuralNet {
 
 
 int main () {
-    vector<int> topology = {2, 4, 1};
+    vector<int> topology = {2, 4, 2};
     vector<double> input {1, 1};
-    NeuralNet a = NeuralNet(topology);
+    vector<double> trueOuput = {1, 1};
+    double eta = 0.1;
+    NeuralNet a = NeuralNet(topology, eta);
     
     a.initializeWeights();
     cout<<"Before forward Pass"<<endl;
@@ -185,6 +228,37 @@ int main () {
             }
 
             cout<<"Output: "<<neuron.output<<endl;
+
+            cout<<"---------------------"<<endl;
+        }
+
+        cout<<"****************************************"<<endl;
+    }
+
+    a.backwardPass(trueOuput);
+    
+    cout<<"After backward Pass"<<endl;
+
+    for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
+        
+        cout<<"Layer: "<<layer_no+1<<endl;
+        cout<<"<---->"<<endl;
+        
+        Layer layer = a.Layers[layer_no];
+
+        for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
+            
+            cout<<"Neuron "<<neuron_no+1<<": "<<endl;
+            cout<<"<---->"<<endl;
+            
+            Neuron neuron = layer[neuron_no];
+            vector<double>neuron_weights = neuron.weights;
+
+            for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
+                cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
+            }
+
+            cout<<"Gradient: "<<neuron.gradient<<endl;
 
             cout<<"---------------------"<<endl;
         }
