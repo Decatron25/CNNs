@@ -175,7 +175,7 @@ public:
 		for(int i=0;i<filterDimension;i++){
 			for(int j=0;j<filterDimension;j++){
 				for(int channel = 0;channel<inputChannels;channel++){
-					sum += ((row+i<0 || col+j<0 || row+i>=imageDim || col+j >= imageDim ) ? 0 : filters[channel][i][j]*mat[channel][row+i][col+j]);
+					sum += ((row+i<0 || col+j<0 || row+i>=imageDim || col+j >= imageDim ) ? 0 : (filters[channel][i][j]*mat[channel][row+i][col+j]+biases[channel]));
 				}
 			}
 		}
@@ -232,6 +232,7 @@ public:
 			}
 		}
 		// cout<<"Initialised weights"<<endl;
+		this->biases.resize(filterCount,(double)0);
 	}
 
 };
