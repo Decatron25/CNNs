@@ -554,6 +554,27 @@ public:
 	
 };
 
+void print_gradients(Layer* layer){
+	vector<vector<vector<double>>>filters = layer->layerGradient;
+
+	for(int filter_no = 0; filter_no<1; filter_no++){
+		cout<<"Gradient no: "<<filter_no<<endl;
+		cout<<"*****************"<<endl;
+		for(int i=0; i< filters.size(); i++){
+			cout<<"channel no: "<<i<<endl;
+			cout<<"<---------------->"<<endl;
+			for(int j=0; j<filters[0].size(); j++){
+				for(int k=0; k<filters[0][0].size(); k++){
+					cout<<filters[i][j][k]<<" ";
+				}
+				cout<<endl;
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+}
+
 void print_filters(Layer* layer){
 	vector<vector<vector<vector<double>>>>filters = layer->filters;
 
@@ -575,11 +596,10 @@ void print_filters(Layer* layer){
 	}
 }
 
-
 int main () {
 	vector<vector<vector<double>>> inputImage = {{{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}, {{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}};
     //type of layer, number of filters, filter dimension, padding, stride
-	vector<vector<int>> networkTopology = {{CONVOLUTION, 2, 3, SAME, 2}, {MAXPOOLING, 1, 3, SAME, 2}};
+	vector<vector<int>> networkTopology = {{CONVOLUTION, 2, 3, SAME, 1}, {MAXPOOLING, 1, 3, VALID, 1}};
 //    vector<vector<int>> networkTopology = {{MAXPOOLING, 1, 3, SAME, 1}};
 
 	CNNnet CNN(networkTopology, inputImage);
@@ -595,6 +615,9 @@ int main () {
 		cout<<"Filters: "<<endl;
 	
 		print_filters(CNN.Layers[layer_no]);
+
+		cout<<"Gradients: "<<endl;
+		print_gradients(CNN.Layers[layer_no]);
 		vector<vector<vector<double>>>& layer_output = CNN.Layers[layer_no]->output;
 		
 		cout<<"No.of channels: "<<layer_output.size()<<endl;
@@ -631,6 +654,9 @@ int main () {
 		cout<<"Filters: "<<endl;
 	
 		print_filters(CNN.Layers[layer_no]);
+
+		cout<<"Gradients: "<<endl;
+		print_gradients(CNN.Layers[layer_no]);
 		vector<vector<vector<double>>>& layer_output = CNN.Layers[layer_no]->output;
 		
 		cout<<"No.of channels: "<<layer_output.size()<<endl;
