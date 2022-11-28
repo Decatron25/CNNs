@@ -1,24 +1,14 @@
-#include<bits/stdc++.h>
-#include<random>
-#include<time.h>
-#include<cstdlib>
-#include<cmath>
-using namespace std;
+
+#include "ANNS.hpp"
 
 
-class Neuron {
-
-public:
-    double output;
-    vector<double> weights;
-    double gradient;
     
-    Neuron (double output) {
+    Neuron::Neuron (double output) {
         this->output = output;
         gradient = 0;
     }
 
-    void initializeWeights(int weightSize, int n_index) {
+    void Neuron::initializeWeights(int weightSize, int n_index) {
         srand(time(0));
         weights.resize(weightSize);
         if (n_index == 0) {
@@ -39,7 +29,7 @@ public:
     }
 
     //n_index is the index of neuron in the layer
-    void forwardPassFirstLayer(vector<double>& input, int n_index) {
+    void Neuron::forwardPassFirstLayer(vector<double>& input, int n_index) {
         if (n_index == 0) {
             output = 1;
         } else {
@@ -48,11 +38,11 @@ public:
 
     }
 
-    double sigmoidActivation (double x) {
+    double Neuron::sigmoidActivation (double x) {
          return 1.0 / (1.0 + exp(-1.0 * x));
     }
 
-    void forwardPassSigmoid(vector<Neuron>& prevLayer, int n_index) {
+    void Neuron::forwardPassSigmoid(vector<Neuron>& prevLayer, int n_index) {
         double sum = 0;
         for (int i = 0; i < prevLayer.size(); i++) {
             sum += prevLayer[i].output * prevLayer[i].weights[n_index];
@@ -61,7 +51,7 @@ public:
     }
 
 
-    double forwardPassLastLayer(vector<Neuron>& prevLayer, int n_index) {
+    double Neuron::forwardPassLastLayer(vector<Neuron>& prevLayer, int n_index) {
         double sum = 0;
         for (int i = 0; i < prevLayer.size(); i++) {
             sum += prevLayer[i].output * prevLayer[i].weights[n_index];
@@ -70,20 +60,13 @@ public:
         return output;
     }
 
-    void backwardPass() {
+    void Neuron::backwardPass() {
 
     }
-};
 
-typedef vector<Neuron> Layer;
 
-class NeuralNet {
-    
-    public:
-        vector<Layer>Layers;
-        double eta;
         
-        NeuralNet(vector<int> topology,double eta) {
+        NeuralNet::NeuralNet(vector<int> topology,double eta) {
             Layers.resize(topology.size());
             for(int i=0;i<topology.size();i++){
                 Layers[i].push_back(Neuron(1));
@@ -94,7 +77,7 @@ class NeuralNet {
             this->eta = eta;
         }
 
-        void initializeWeights() {
+        void NeuralNet::initializeWeights() {
             for(int i =0;i<Layers.size();i++){
                 for(int j =0;j<Layers[i].size();j++){
                     if(i!=Layers.size()-1)Layers[i][j].initializeWeights(Layers[i+1].size(),j);
@@ -107,7 +90,7 @@ class NeuralNet {
 
     
         // runs through all layers, and exludes the first neuron (bias neuron)
-        void forwardPass(vector<double>& input) {
+        void NeuralNet::forwardPass(vector<double>& input) {
             
             assert(Layers.size() != 0);
 
@@ -130,10 +113,11 @@ class NeuralNet {
             for (int j = 1; j < Layers[lastlayer].size(); j++) {
                     Layers[lastlayer][j].output /= normalize_factor;
             }
+            return;
         }
 
 
-        void backwardPass(vector<double>& trueOutput) {
+        void NeuralNet::backwardPass(vector<double>& trueOutput) {
             //compute graidents for last layer
             int lastLayer = Layers.size() - 1;
             for (int i = 1; i < Layers[lastLayer].size(); i++) {
@@ -163,8 +147,6 @@ class NeuralNet {
 
         }
 
-
-};
 
 
 int main () {
