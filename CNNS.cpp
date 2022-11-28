@@ -306,11 +306,11 @@ public:
 		for(int filter=0;filter<filterCount;filter++){
 			for(int channel=0;channel<inputChannels;channel++){
 				int startind = 0;
-				int endind = inputDimension-filterDimension;
+				int endind = inputDimension-outputDimension;
 				for(int i = startind ;i<=endind;i++){
 					for(int j = startind;j<=endind;j++){
-						for(int r=0;r<filterDimension;r++){
-							for(int c = 0;c<filterDimension;c++){
+						for(int r=0;r<outputDimension;r++){
+							for(int c = 0;c<outputDimension;c++){
 								filterGradient[filter][channel][i][j] += (Layers[index-1]->output[channel][r+i][c+j]*outputGradients[filter][r][c]);
 							}
 						}	
@@ -358,7 +358,7 @@ public:
 	// backward pass for first layer
 	void backwardPassFirstLayer(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers, vector<vector<vector<double>>>& inputImage) {
 		int inputlayerdim = inputImage[0].size();
-		this->layerGradient.resize(filterCount,vector<vector<double>>(inputlayerdim,vector<double>(inputlayerdim,0)));
+		this->layerGradient.resize(inputChannels,vector<vector<double>>(inputlayerdim,vector<double>(inputlayerdim,0)));
 		
 		//backprop for relu
 		for (int i = 0; i < outputGradients.size(); i++) {
@@ -374,11 +374,11 @@ public:
 		for(int filter=0;filter<filterCount;filter++){
 			for(int channel=0;channel<inputChannels;channel++){
 				int startind = 0;
-				int endind = inputDimension-filterDimension;
+				int endind = inputDimension-outputDimension;
 				for(int i = startind ;i<=endind;i++){
 					for(int j = startind;j<=endind;j++){
-						for(int r=0;r<filterDimension;r++){
-							for(int c = 0;c<filterDimension;c++){
+						for(int r=0;r<outputDimension;r++){
+							for(int c = 0;c<outputDimension;c++){
 								filterGradient[filter][channel][i][j] += (inputImage[channel][r+i][c+j]*outputGradients[filter][r][c]);
 							}
 						}	
@@ -576,7 +576,7 @@ void print_gradients(Layer* layer){
 }
 
 void print_filters(Layer* layer){
-	vector<vector<vector<vector<double>>>>filters = layer->filters;
+	vector<vector<vector<vector<double>>>>filters = layer->filterGradient;
 
 	for(int filter_no = 0; filter_no<filters.size(); filter_no++){
 		cout<<"Filter no: "<<filter_no<<endl;
@@ -599,7 +599,7 @@ void print_filters(Layer* layer){
 int main () {
 	vector<vector<vector<double>>> inputImage = {{{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}, {{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}};
     //type of layer, number of filters, filter dimension, padding, stride
-	vector<vector<int>> networkTopology = {{CONVOLUTION, 2, 3, SAME, 1}, {MAXPOOLING, 1, 3, VALID, 1}};
+	vector<vector<int>> networkTopology = {{CONVOLUTION, 3, 2, VALID, 1}, {MAXPOOLING, 1, 2, VALID, 2}};
 //    vector<vector<int>> networkTopology = {{MAXPOOLING, 1, 3, SAME, 1}};
 
 	CNNnet CNN(networkTopology, inputImage);
