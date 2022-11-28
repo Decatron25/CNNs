@@ -9,10 +9,23 @@ public:
     vector<vector<vector<vector<double>>>> inputData;
     vector<vector<double>> trueOutputData;
 
-    void getData(string filename) {}
+    void getData(string filename);
+
+    void printData () {
+        for (int i = 0; i < inputData.size(); i++) {
+            for (int j = 0; j < inputData[i].size(); j++) {
+                for (int k = 0; k < inputData[i][j].size(); k++) {
+                    for (int l = 0; l < inputData[i][j][k].size(); l++) {
+                        cout<<inputData[i][j][k][l]<<" ";
+                    }
+                }
+            }
+        }
+    }
 
     FullNN (string filename) {
         getData(filename);
+        printData();
         vector<int> topology = {2, 4, 2};
         double eta = 0.1;
         ANNObj = NeuralNet(topology, eta);
@@ -22,6 +35,7 @@ public:
         double learning_rate  = 0.15;
     	CNNnetObj = CNNnet(networkTopology, inputData[0], learning_rate);
         CNNnetObj.InitializeLayers();
+    
 
     }
 
@@ -36,7 +50,7 @@ public:
         for (int i = 0; i < ANNObj.Layers[0].size(); i++) {
             gradientsToCNN.push_back(ANNObj.Layers[0][i].gradient);
         }
-        CNNObj.backwardpass(gradientsToCNN);
+        CNNnetObj.backwardPass(gradientsToCNN);
     }
 
 
@@ -105,11 +119,13 @@ void FullNN::getData(string filename) {
 	
 			}
 		}
-}
+};
 
 int main () {
     int iterations = 1;
     FullNN n = FullNN("train.csv");
     n.training(iterations);
-    n.test("test.csv")
+    n.test("test.csv");
+
+
 }

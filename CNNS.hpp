@@ -40,8 +40,8 @@ public:
 	virtual void backwardPassFirstLayer(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers, vector<vector<vector<double>>>& inputImage);
 	virtual void backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers);
 	virtual void updateWeights();
-	virtual void updateBiases(vector<vector<vector<double>>>& outputGradients);
-	virtual void backwardPassBias();
+	virtual void updateBiases();
+	virtual void backwardPassBias(vector<vector<vector<double>>>& outputGradients);
 };
 
 
@@ -55,11 +55,11 @@ public:
     double avg_finder2D(vector<vector<double>>mat,int focusRow,int focusCol,int filterDimension);
     void forwardPass(vector<vector<vector<double>>> &inputImage);
     void InitializeWeights();
-    void updateWeights(){}
-	void updateBiases(){}
-	void backwardPassBias(vector<vector<vector<double>>>outputGradients);
+    void updateWeights();
+	void updateBiases();
     void un_max2D(vector<vector<double>>mat,int channel_no,int focusRow,int focusCol,double grad_val,int filterDimension);
     void backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers);
+	void backwardPassBias(vector<vector<vector<double>>>& outputGradients);
 	void backwardPassFirstLayer(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers, vector<vector<vector<double>>>& inputImage);
 };
 
@@ -83,9 +83,10 @@ class CNNnet {
     public:
         vector<Layer*> Layers;
         vector<int> topology;	
-        vector<vector<vector<double>>>& inputImage;
+        vector<vector<vector<double>>> inputImage;
         double learning_rate;
         vector<double>flattenedOutput;
+		CNNnet();
     	CNNnet(vector<vector<int>>& networkTopology, vector<vector<vector<double>>>& inputImageData, double learning_rate = 0.1);
     	void forwardPass(vector<vector<vector<double>>>& inputImage);
     	void InitializeLayers();        	

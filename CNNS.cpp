@@ -28,7 +28,31 @@
 // };
 
 
+	// virtual void Layer::backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers);
 
+	void Layer::forwardPass(vector<vector<vector<double>>> &inputImage){
+
+	}
+	void Layer::InitializeWeights(){
+
+	}
+	void Layer::backwardPassFirstLayer(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers, vector<vector<vector<double>>>& inputImage){
+
+	}
+	void Layer::backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers){
+
+	}
+	void Layer::updateWeights(){
+
+	}
+	void Layer::updateBiases(){
+
+	}
+	void Layer::backwardPassBias(vector<vector<vector<double>>>& outputGradients){
+
+	}
+
+	
 	PoolingLayer::PoolingLayer (int inputChannels, int filterCount, int filterDimension, int padding, int stride, string type,double learning_rate) {
 		this->inputChannels = inputChannels;
 		this->filterCount = 1;
@@ -183,6 +207,13 @@
 
 	}
 	
+	void PoolingLayer::updateWeights(){
+		return;
+	}
+
+	void PoolingLayer::updateBiases(){
+		return;
+	}
 	void PoolingLayer::backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers){
 		vector<vector<vector<double>>>prev_output = Layers[index-1]->output;
 		this->layerGradient.resize(prev_output.size(),vector<vector<double>>(prev_output[0].size(),vector<double>(prev_output[0][0].size(),0)));
@@ -201,8 +232,11 @@
 		
 	}
 
+	void PoolingLayer:: backwardPassBias(vector<vector<vector<double>>>& outputGradients){
+		return;
+	}
 	void PoolingLayer::backwardPassFirstLayer(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers, vector<vector<vector<double>>>& inputImage) {
-		
+		return;
 	}
 
 
@@ -270,6 +304,7 @@
 		
 		
 	} //apply relu
+
 
 	void ConvLayer::backwardPass(vector<vector<vector<double>>>& outputGradients, int index, vector<Layer*>& Layers){
 		// resize layergradient according to previous layer output
@@ -466,8 +501,9 @@
 
 
 	
-	CNNnet::CNNnet(vector<vector<int>>& networkTopology, vector<vector<vector<double>>>& inputImageData, double learning_rate): inputImage(inputImageData) {
+	CNNnet::CNNnet(vector<vector<int>>& networkTopology, vector<vector<vector<double>>>& inputImageData, double learning_rate) {
         //assumption: first layer is a CONVOLUTION layer
+		inputImage = inputImageData;
 		this->learning_rate = learning_rate;
         if (networkTopology.size() == 0) {
             cout<<"give valid topology"<<endl;
@@ -513,6 +549,7 @@
 	}
 
 	void CNNnet:: forwardPass(vector<vector<vector<double>>>& inputImage) {
+
         Layers[0]->forwardPass(inputImage);
         // cout<<"1st forward"<<endl;
 		for (int i = 1; i < topology.size(); i++) {
@@ -558,7 +595,7 @@
 
 		Layers[0]->backwardPassFirstLayer(Layers[1] ->layerGradient,0, Layers, inputImage);
 
-		for (int i = lastlayer - 1; i > 0; i--) {
+		for (int i = lastlayer - 1; i >= 0; i--) {
 			//updating weights and biases update biases is called in updateweights only
 			Layers[i]->updateWeights();
 		}
@@ -654,100 +691,100 @@ void print_outptut(vector<vector<vector<double>>>& layer_output){
 		}
 	}
 
-int main () {
-	vector<vector<vector<double>>> inputImage = {{{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}, {{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}};
-    //type of layer, number of filters, filter dimension, padding, stride
-	vector<vector<int>> networkTopology = {{CONVOLUTION, 3, 2, VALID, 1}, {MAXPOOLING, 1, 2, VALID, 2}};
-//    vector<vector<int>> networkTopology = {{MAXPOOLING, 1, 3, SAME, 1}};
+// int main () {
+// 	vector<vector<vector<double>>> inputImage = {{{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}, {{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5},{1,2,3,4,5}}};
+//     //type of layer, number of filters, filter dimension, padding, stride
+// 	vector<vector<int>> networkTopology = {{CONVOLUTION, 3, 2, VALID, 1}, {MAXPOOLING, 1, 2, VALID, 2}};
+// //    vector<vector<int>> networkTopology = {{MAXPOOLING, 1, 3, SAME, 1}};
 
-	CNNnet CNN(networkTopology, inputImage,0.15);
-	CNN.InitializeLayers();
-	CNN.forwardPass(inputImage);
+// 	CNNnet CNN(networkTopology, inputImage,0.15);
+// 	CNN.InitializeLayers();
+// 	CNN.forwardPass(inputImage);
 	
 	
-	for(int layer_no = 0;layer_no<CNN.Layers.size();layer_no++){
+// 	for(int layer_no = 0;layer_no<CNN.Layers.size();layer_no++){
 		
-		cout<<"-------------------------------Layer_no: "<<layer_no<<endl;
-		cout<<"........................................................................"<<endl;
-		cout<<endl;
+// 		cout<<"-------------------------------Layer_no: "<<layer_no<<endl;
+// 		cout<<"........................................................................"<<endl;
+// 		cout<<endl;
 
-		cout<<"-----------Filters: "<<endl;
-		cout<<"........................................"<<endl;
-		cout<<endl;
+// 		cout<<"-----------Filters: "<<endl;
+// 		cout<<"........................................"<<endl;
+// 		cout<<endl;
 
-		print_filters(CNN.Layers[layer_no]);
+// 		print_filters(CNN.Layers[layer_no]);
 
-		cout<<endl;
-		cout<<endl;
+// 		cout<<endl;
+// 		cout<<endl;
 
-		cout<<"-----------Biases: "<<endl;
-		cout<<"........................................"<<endl;
-		cout<<endl;
+// 		cout<<"-----------Biases: "<<endl;
+// 		cout<<"........................................"<<endl;
+// 		cout<<endl;
 
-		print_biases(CNN.Layers[layer_no]);
+// 		print_biases(CNN.Layers[layer_no]);
 
-		cout<<endl;
-		cout<<endl;
+// 		cout<<endl;
+// 		cout<<endl;
 
-		cout<<"----------Gradients: "<<endl;
-		cout<<"........................................"<<endl;
-		cout<<endl;
+// 		cout<<"----------Gradients: "<<endl;
+// 		cout<<"........................................"<<endl;
+// 		cout<<endl;
 
-		print_gradients(CNN.Layers[layer_no]);
+// 		print_gradients(CNN.Layers[layer_no]);
 
-		cout<<endl;
-		cout<<endl;
+// 		cout<<endl;
+// 		cout<<endl;
 
 	
 
-		cout<<"----------Output: "<<endl;
-		cout<<"........................................"<<endl;
-		cout<<endl;
+// 		cout<<"----------Output: "<<endl;
+// 		cout<<"........................................"<<endl;
+// 		cout<<endl;
 
-		print_outptut(CNN.Layers[layer_no]->output);
+// 		print_outptut(CNN.Layers[layer_no]->output);
 		
-		cout<<"<--------------------->"<<endl;
-	}
-	vector<double> v(50, 0.1);
-	CNN.backwardPass(v);
+// 		cout<<"<--------------------->"<<endl;
+// 	}
+// 	vector<double> v(50, 0.1);
+// 	CNN.backwardPass(v);
 
-	cout<<"BACKWARD PASS COMPLETED"<<endl;
-	cout<<"<--------------->"<<endl;
-	cout<<endl;
-	cout<<endl;
+// 	cout<<"BACKWARD PASS COMPLETED"<<endl;
+// 	cout<<"<--------------->"<<endl;
+// 	cout<<endl;
+// 	cout<<endl;
 
-	for(int layer_no = 0;layer_no<CNN.Layers.size();layer_no++){
+// 	for(int layer_no = 0;layer_no<CNN.Layers.size();layer_no++){
 		
-		cout<<"Layer_no: "<<layer_no<<endl;
-		cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+// 		cout<<"Layer_no: "<<layer_no<<endl;
+// 		cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
 
-		cout<<"Filters: "<<endl;
+// 		cout<<"Filters: "<<endl;
 	
-		print_filters(CNN.Layers[layer_no]);
+// 		print_filters(CNN.Layers[layer_no]);
 
-		cout<<"Gradients: "<<endl;
-		print_gradients(CNN.Layers[layer_no]);
-		vector<vector<vector<double>>>& layer_output = CNN.Layers[layer_no]->output;
+// 		cout<<"Gradients: "<<endl;
+// 		print_gradients(CNN.Layers[layer_no]);
+// 		vector<vector<vector<double>>>& layer_output = CNN.Layers[layer_no]->output;
 		
-		cout<<"No.of channels: "<<layer_output.size()<<endl;
-		cout<<"output dimension: "<<layer_output[0].size()<<endl;
+// 		cout<<"No.of channels: "<<layer_output.size()<<endl;
+// 		cout<<"output dimension: "<<layer_output[0].size()<<endl;
 
-		cout<<"Output: "<<endl;
-		cout<<"<-------->"<<endl;
-		for(int channel_no = 0; channel_no<layer_output.size();channel_no++){
-			cout<<"channel_no: "<<channel_no<<endl;
-			for(int row = 0; row<layer_output[0].size(); row++){
+// 		cout<<"Output: "<<endl;
+// 		cout<<"<-------->"<<endl;
+// 		for(int channel_no = 0; channel_no<layer_output.size();channel_no++){
+// 			cout<<"channel_no: "<<channel_no<<endl;
+// 			for(int row = 0; row<layer_output[0].size(); row++){
 				
-				for(int col = 0; col<layer_output[0][0].size(); col++){
-					cout<<layer_output[channel_no][row][col]<<" ";
-				}
-				cout<<endl;
-			}
-			cout<<endl;
-		}
-		cout<<"<--------------------->"<<endl;
-	}
+// 				for(int col = 0; col<layer_output[0][0].size(); col++){
+// 					cout<<layer_output[channel_no][row][col]<<" ";
+// 				}
+// 				cout<<endl;
+// 			}
+// 			cout<<endl;
+// 		}
+// 		cout<<"<--------------------->"<<endl;
+// 	}
 	
 
-	return 0;
-}
+// 	return 0;
+// }

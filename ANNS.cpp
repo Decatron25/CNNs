@@ -149,104 +149,104 @@
 
 
 
-int main () {
-    vector<int> topology = {2, 4, 2};
-    vector<double> input {1, 1};
-    vector<double> trueOuput = {1, 1};
-    double eta = 0.1;
-    NeuralNet a = NeuralNet(topology, eta);
+//  int main () {
+//     vector<int> topology = {2, 4, 2};
+//     vector<double> input {1, 1};
+//     vector<double> trueOuput = {1, 1};
+//     double eta = 0.1;
+//     NeuralNet a = NeuralNet(topology, eta);
     
-    a.initializeWeights();
-    cout<<"Before forward Pass"<<endl;
+//     a.initializeWeights();
+//     cout<<"Before forward Pass"<<endl;
 
-    for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
+//     for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
         
-        cout<<"Layer: "<<layer_no+1<<endl;
-        cout<<"<---->"<<endl;
+//         cout<<"Layer: "<<layer_no+1<<endl;
+//         cout<<"<---->"<<endl;
         
-        Layer layer = a.Layers[layer_no];
+//         vector<Neuron> layer = a.Layers[layer_no];
 
-        for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
+//         for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
             
-            cout<<"Neuron "<<neuron_no+1<<": "<<endl;
-            cout<<"<---->"<<endl;
+//             cout<<"Neuron "<<neuron_no+1<<": "<<endl;
+//             cout<<"<---->"<<endl;
             
-            Neuron neuron = layer[neuron_no];
-            vector<double>neuron_weights = neuron.weights;
+//             Neuron neuron = layer[neuron_no];
+//             vector<double>neuron_weights = neuron.weights;
 
-            for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
-                cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
-            }
+//             for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
+//                 cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
+//             }
 
-            cout<<"Output: "<<neuron.output<<endl;
+//             cout<<"Output: "<<neuron.output<<endl;
 
-            cout<<"---------------------"<<endl;
-        }
+//             cout<<"---------------------"<<endl;
+//         }
 
-        cout<<"****************************************"<<endl;
-    }
+//         cout<<"****************************************"<<endl;
+//     }
 
 
-    a.forwardPass(input);
-    cout<<"After forward Pass"<<endl;
+//     a.forwardPass(input);
+//     cout<<"After forward Pass"<<endl;
 
-    for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
+//     for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
         
-        cout<<"Layer: "<<layer_no+1<<endl;
-        cout<<"<---->"<<endl;
+//         cout<<"Layer: "<<layer_no+1<<endl;
+//         cout<<"<---->"<<endl;
         
-        Layer layer = a.Layers[layer_no];
+//          vector<Neuron> layer = a.Layers[layer_no];
 
-        for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
+//         for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
             
-            cout<<"Neuron "<<neuron_no+1<<": "<<endl;
-            cout<<"<---->"<<endl;
+//             cout<<"Neuron "<<neuron_no+1<<": "<<endl;
+//             cout<<"<---->"<<endl;
             
-            Neuron neuron = layer[neuron_no];
-            vector<double>neuron_weights = neuron.weights;
+//             Neuron neuron = layer[neuron_no];
+//             vector<double>neuron_weights = neuron.weights;
 
-            for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
-                cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
-            }
+//             for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
+//                 cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
+//             }
 
-            cout<<"Output: "<<neuron.output<<endl;
+//             cout<<"Output: "<<neuron.output<<endl;
 
-            cout<<"---------------------"<<endl;
-        }
+//             cout<<"---------------------"<<endl;
+//         }
 
-        cout<<"****************************************"<<endl;
-    }
+//         cout<<"****************************************"<<endl;
+//     }
 
-    a.backwardPass(trueOuput);
+//     a.backwardPass(trueOuput);
     
-    cout<<"After backward Pass"<<endl;
+//     cout<<"After backward Pass"<<endl;
 
-    for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
+//     for(int layer_no = 0; layer_no < a.Layers.size(); layer_no++){
         
-        cout<<"Layer: "<<layer_no+1<<endl;
-        cout<<"<---->"<<endl;
+//         cout<<"Layer: "<<layer_no+1<<endl;
+//         cout<<"<---->"<<endl;
         
-        Layer layer = a.Layers[layer_no];
+//         vector<Neuron> layer = a.Layers[layer_no];
 
-        for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
+//         for(int neuron_no = 0; neuron_no < layer.size(); neuron_no++){
             
-            cout<<"Neuron "<<neuron_no+1<<": "<<endl;
-            cout<<"<---->"<<endl;
+//             cout<<"Neuron "<<neuron_no+1<<": "<<endl;
+//             cout<<"<---->"<<endl;
             
-            Neuron neuron = layer[neuron_no];
-            vector<double>neuron_weights = neuron.weights;
+//             Neuron neuron = layer[neuron_no];
+//             vector<double>neuron_weights = neuron.weights;
 
-            for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
-                cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
-            }
+//             for(int weight_no = 0; weight_no < neuron_weights.size(); weight_no++){
+//                 cout<<"Weight "<<weight_no+1<<": "<<neuron_weights[weight_no]<<endl;
+//             }
 
-            cout<<"Gradient: "<<neuron.gradient<<endl;
+//             cout<<"Gradient: "<<neuron.gradient<<endl;
 
-            cout<<"---------------------"<<endl;
-        }
+//             cout<<"---------------------"<<endl;
+//         }
 
-        cout<<"****************************************"<<endl;
-    }
+//         cout<<"****************************************"<<endl;
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

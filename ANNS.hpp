@@ -26,13 +26,13 @@ class Neuron{
         void backwardPass();
 };
 
-typedef vector<Neuron> Layer;
+//typedef vector<Neuron> Layer;
 
 class NeuralNet{
     public:
-        vector<Layer>Layers;
+        vector<vector<Neuron>>Layers;
         double eta;
-
+        NeuralNet();
         NeuralNet(vector<int> topology,double eta);
         void initializeWeights();
         void forwardPass(vector<double>& input);
