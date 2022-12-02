@@ -13,7 +13,7 @@
         weights.resize(weightSize);
         if (n_index == 0) {
             // double temp = (double)rand()/RAND_MAX;
-            double temp =1;
+            double temp =1.0;
             for(int i=0;i<weightSize;i++){
                 this->weights[i] = temp;
             }
@@ -23,7 +23,7 @@
         
         for(int i=0;i<weightSize;i++){
             // this->weights[i] = (double)rand()/RAND_MAX;
-            this->weights[i] = 1;
+            this->weights[i] = 1.0;
         }
         
     }
@@ -39,14 +39,17 @@
     }
 
     double Neuron::sigmoidActivation (double x) {
-         return 1.0 / (1.0 + exp(-1.0 * x));
+        // return x;
+        return 1.0 / (1.0 + exp(-1.0 * x));
     }
 
     void Neuron::forwardPassSigmoid(vector<Neuron>& prevLayer, int n_index) {
         double sum = 0;
+        // cout<<"Layers size "<<prevLayer.size()<<endl;
         for (int i = 0; i < prevLayer.size(); i++) {
             sum += prevLayer[i].output * prevLayer[i].weights[n_index];
         }
+        
         output = sigmoidActivation(sum);
     }
 
@@ -56,6 +59,7 @@
         for (int i = 0; i < prevLayer.size(); i++) {
             sum += prevLayer[i].output * prevLayer[i].weights[n_index];
         }
+        // cout<<"last node value "<<sum<<endl;
         output = exp(sum);
         return output;
     }
@@ -65,7 +69,9 @@
     }
 
 
-        
+        NeuralNet:: NeuralNet(){
+
+        }
         NeuralNet::NeuralNet(vector<int> topology,double eta) {
             Layers.resize(topology.size());
             for(int i=0;i<topology.size();i++){

@@ -290,6 +290,7 @@
 		int endRow = this->inputDimension- this->filterDimension + this->padding;
 		int endCol = endRow;
 		output.resize(this->filterCount,vector<vector<double>>(this->outputDimension,vector<double>(this->outputDimension)));
+		cout<<"Resize done in CNN forward pass for first layer"<<endl;
 		for(int filter = 0;filter<this->filterCount;filter++){
 			int row = 0;
 			for(int r = startRow ; r<=endRow; r+=stride){
@@ -301,8 +302,7 @@
 				row++;
 			}
 		}
-		
-		
+		cout<<"convolution done"<<endl;
 	} //apply relu
 
 
@@ -497,10 +497,9 @@
 	}
 
 
+	CNNnet::CNNnet(){
 
-
-
-	
+	}
 	CNNnet::CNNnet(vector<vector<int>>& networkTopology, vector<vector<vector<double>>>& inputImageData, double learning_rate) {
         //assumption: first layer is a CONVOLUTION layer
 		inputImage = inputImageData;
@@ -551,12 +550,14 @@
 	void CNNnet:: forwardPass(vector<vector<vector<double>>>& inputImage) {
 
         Layers[0]->forwardPass(inputImage);
-        // cout<<"1st forward"<<endl;
+        cout<<"1st forward"<<endl;
 		for (int i = 1; i < topology.size(); i++) {
            Layers[i]->forwardPass(Layers[i - 1]->output);
         //    cout<<"forward loop"<<endl;
        	}
+		cout<<"Before flatten in CNN"<<endl;
 		flatten();
+		cout<<"After flatten in CNN"<<endl;
 	}
 
 	void CNNnet::InitializeLayers() {
