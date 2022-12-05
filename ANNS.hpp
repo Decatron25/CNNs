@@ -18,8 +18,9 @@ class Neuron{
         double gradient;
 
         Neuron(double output);
-        void initializeWeights(int weightSize,int n_index);
+        void initializeWeights(int weightSize, int n_index,default_random_engine &generator,normal_distribution<double> &distribution);
         void forwardPassFirstLayer(vector<double>& input, int n_index);
+        
         double sigmoidActivation (double x);
         void forwardPassSigmoid(vector<Neuron>& prevLayer, int n_index);
         double forwardPassLastLayer(vector<Neuron>& prevLayer, int n_index);
@@ -37,6 +38,7 @@ class NeuralNet{
         void initializeWeights();
         void forwardPass(vector<double>& input);
         void backwardPass(vector<double>& trueOutput);
+        void train(int epochs, vector<vector<double>>& inputData, vector<vector<double>>& trueOutput);
 
 
 };
